@@ -3,14 +3,15 @@ class Employee < ApplicationRecord
   validates :first_name, presence: true
   validates :last_name, presence: true
   validates :email, presence: true, uniqueness: true
-  validates :phone_number, presence: true
+  validates :phone_number, presence: true, uniqueness: true
   validates :date_of_join, presence: true
-  validates :salary, presence: true
+  validates :salary, presence: true, numericality: true
 
   after_create :calculate_salary_and_tax
 
   def calculate_salary_and_tax
-    months_salary = salary * number_of_months(self.date_of_join)
+    number_of_months = number_of_months(self.date_of_join)
+    months_salary = salary * number_of_months
     remaining_days_salary = ((number_of_remaining_days(self.date_of_join) * salary) / 30) if number_of_months < 12
     total_salary = months_salary.to_f + remaining_days_salary.to_f
     tax_amount = calculate_tax(total_salary)

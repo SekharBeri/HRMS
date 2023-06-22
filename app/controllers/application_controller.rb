@@ -23,5 +23,9 @@ class ApplicationController < ActionController::API
     render json: json
   end
 
+  def array_json(object, each_serializer, options={})
+    ActiveModelSerializers::SerializableResource.new(object, each_serializer: each_serializer)
+  end
+
 
 end

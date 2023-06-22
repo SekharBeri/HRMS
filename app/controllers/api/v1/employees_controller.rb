@@ -1,10 +1,17 @@
 class Api::V1::EmployeesController < ApplicationController
   before_action :employee, only: [:show]
 
+  def index
+    @employees = Employee.all
+    render_failure_response(["No employee data present"]) and return  if @employees.empty?
+
+    render_success_response(array_json(@employees, EmployeeSerializer), ['employees loaded successfully.'], [])
+  end
+
   def create
     @employee = Employee.create(employee_params)
     if @employee.errors.empty?
-      render_success_response({}, ["Employee created successfully"], [])
+      render_success_response(@employee, ["Employee created successfully"], [])
     else
       render_failure_response(@employee.errors)
     end
